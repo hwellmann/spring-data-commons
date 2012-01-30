@@ -15,7 +15,7 @@
  */
 package org.springframework.data.repository.core.support;
 
-import static org.springframework.util.ReflectionUtils.*;
+import static org.springframework.util.ReflectionUtils.makeAccessible;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -26,19 +26,22 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.core.GenericTypeResolver;
+import org.springframework.data.proxy.IProxyFactory;
+import org.springframework.data.proxy.ProxyToysProxyFactory;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.data.repository.core.NamedQueries;
 import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.QueryLookupStrategy;
+import org.springframework.data.repository.query.QueryLookupStrategy.Key;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.RepositoryQuery;
-import org.springframework.data.repository.query.QueryLookupStrategy.Key;
 import org.springframework.data.repository.util.ClassUtils;
 import org.springframework.util.Assert;
+
+import com.thoughtworks.proxy.ProxyFactory;
 
 /**
  * Factory bean to create instances of a given repository interface. Creates a proxy implementing the configured
@@ -131,7 +134,7 @@ public abstract class RepositoryFactorySupport {
 		Object target = getTargetRepository(information);
 
 		// Create proxy
-		ProxyFactory result = new ProxyFactory();
+		IProxyFactory result = new ProxyToysProxyFactory();
 		result.setTarget(target);
 		result.setInterfaces(new Class[] { repositoryInterface, Repository.class });
 

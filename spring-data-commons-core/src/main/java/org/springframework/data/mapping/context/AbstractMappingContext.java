@@ -34,13 +34,9 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
 import org.springframework.data.mapping.PropertyPath;
-import org.springframework.data.mapping.event.MappingContextEvent;
 import org.springframework.data.mapping.model.MappingException;
 import org.springframework.data.mapping.model.MutablePersistentEntity;
 import org.springframework.data.mapping.model.SimpleTypeHolder;
@@ -48,7 +44,6 @@ import org.springframework.data.util.ClassTypeInformation;
 import org.springframework.data.util.TypeInformation;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.ReflectionUtils.FieldCallback;
-import org.springframework.validation.Validator;
 
 /**
  * Base class to build mapping metadata and thus create instances of {@link PersistentEntity} and
@@ -63,14 +58,12 @@ import org.springframework.validation.Validator;
  * @author Oliver Gierke
  */
 public abstract class AbstractMappingContext<E extends MutablePersistentEntity<?, P>, P extends PersistentProperty<P>>
-		implements MappingContext<E, P>, InitializingBean, ApplicationEventPublisherAware {
+		implements MappingContext<E, P> {
 
 	private static final Set<String> UNMAPPED_FIELDS = new HashSet<String>(Arrays.asList("class", "this$0"));
 
 	private final ConcurrentMap<TypeInformation<?>, E> persistentEntities = new ConcurrentHashMap<TypeInformation<?>, E>();
-	private final ConcurrentMap<E, List<Validator>> validators = new ConcurrentHashMap<E, List<Validator>>();
 
-	private ApplicationEventPublisher applicationEventPublisher;
 	private Set<? extends Class<?>> initialEntitySet = new HashSet<Class<?>>();
 	private boolean strict = false;
 	private SimpleTypeHolder simpleTypeHolder = new SimpleTypeHolder();
@@ -78,14 +71,6 @@ public abstract class AbstractMappingContext<E extends MutablePersistentEntity<?
 	private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 	private final Lock read = lock.readLock();
 	private final Lock write = lock.writeLock();
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.context.ApplicationEventPublisher)
-	 */
-	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
-		this.applicationEventPublisher = applicationEventPublisher;
-	}
 
 	/**
 	 * Sets the {@link Set} of types to populate the context initially.
@@ -193,14 +178,6 @@ public abstract class AbstractMappingContext<E extends MutablePersistentEntity<?
 		return new DefaultPersistentPropertyPath<P>(result);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.mapping.context.MappingContext#getEntityValidators(org.springframework.data.mapping.PersistentEntity)
-	 */
-	public List<Validator> getEntityValidators(E entity) {
-		return validators.get(entity);
-	}
-
 	/**
 	 * Adds the given type to the {@link MappingContext}.
 	 * 
@@ -256,11 +233,6 @@ public abstract class AbstractMappingContext<E extends MutablePersistentEntity<?
 			} catch (MappingException e) {
 				persistentEntities.remove(typeInformation);
 				throw e;
-			}
-
-			// Inform listeners
-			if (null != applicationEventPublisher) {
-				applicationEventPublisher.publishEvent(new MappingContextEvent<E, P>(entity, typeInformation));
 			}
 
 			return entity;

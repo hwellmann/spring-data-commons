@@ -29,8 +29,8 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 /**
@@ -41,7 +41,7 @@ import org.springframework.util.Assert;
  */
 public abstract class CdiRepositoryBean<T> implements Bean<T> {
 
-	private static final Log LOG = LogFactory.getLog(CdiRepositoryBean.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CdiRepositoryBean.class);
 
 	private final Set<Annotation> qualifiers;
 	private final Class<T> repositoryType;

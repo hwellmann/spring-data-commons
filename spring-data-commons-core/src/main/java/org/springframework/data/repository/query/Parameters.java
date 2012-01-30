@@ -21,9 +21,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
-import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.Assert;
@@ -46,7 +44,7 @@ public class Parameters implements Iterable<Parameter> {
 	private final int sortIndex;
 
 	private final List<Parameter> parameters;
-	private final ParameterNameDiscoverer discoverer = new LocalVariableTableParameterNameDiscoverer();
+	//private final ParameterNameDiscoverer discoverer = new LocalVariableTableParameterNameDiscoverer();
 
 	/**
 	 * Creates a new instance of {@link Parameters}.
@@ -63,7 +61,7 @@ public class Parameters implements Iterable<Parameter> {
 
 		for (int i = 0; i < types.size(); i++) {
 			MethodParameter parameter = new MethodParameter(method, i);
-			parameter.initParameterNameDiscovery(discoverer);
+			//parameter.initParameterNameDiscovery(discoverer);
 			parameters.add(createParameter(parameter));
 		}
 

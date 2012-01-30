@@ -19,8 +19,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.util.List;
 
-import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
-import org.springframework.core.ParameterNameDiscoverer;
+//import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+//import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.data.mapping.PreferredConstructor;
 import org.springframework.data.mapping.PreferredConstructor.Parameter;
 import org.springframework.data.util.ClassTypeInformation;
@@ -33,7 +33,7 @@ import org.springframework.data.util.TypeInformation;
  */
 public class PreferredConstructorDiscoverer<T> {
 
-	private final ParameterNameDiscoverer nameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
+	//private final ParameterNameDiscoverer nameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
 
 	private PreferredConstructor<T> constructor;
 
@@ -89,7 +89,7 @@ public class PreferredConstructorDiscoverer<T> {
 			return new PreferredConstructor<T>((Constructor<T>) constructor);
 		}
 
-		String[] parameterNames = nameDiscoverer.getParameterNames(constructor);
+		String[] parameterNames = null; //nameDiscoverer.getParameterNames(constructor);
 		Parameter<?>[] parameters = new Parameter[parameterTypes.size()];
 		Annotation[][] parameterAnnotations = constructor.getParameterAnnotations();
 

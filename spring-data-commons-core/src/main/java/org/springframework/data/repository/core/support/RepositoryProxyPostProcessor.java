@@ -15,10 +15,12 @@
  */
 package org.springframework.data.repository.core.support;
 
-import org.springframework.aop.framework.ProxyFactory;
+import org.springframework.data.proxy.IProxyFactory;
+
+import com.thoughtworks.proxy.ProxyFactory;
 
 /**
- * Callback interface used during repository proxy creation. Allows manipulating the {@link ProxyFactory} creating the
+ * Callback interface used during repository proxy creation. Allows manipulating the {@link IProxyFactory} creating the
  * repository.
  * 
  * @author Oliver Gierke
@@ -30,5 +32,5 @@ public interface RepositoryProxyPostProcessor {
 	 * 
 	 * @param factory
 	 */
-	void postProcess(ProxyFactory factory);
+	void postProcess(IProxyFactory factory);
 }

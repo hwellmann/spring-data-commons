@@ -15,7 +15,6 @@
  */
 package org.springframework.data.crossstore;
 
-import org.springframework.dao.DataAccessException;
 
 /**
  * Interface to be implemented by classes that can synchronize between data stores and ChangeSets.
@@ -32,7 +31,7 @@ public interface ChangeSetPersister<K> {
 	 * TODO how to tell when not found? throw exception?
 	 */
 	void getPersistentState(Class<? extends ChangeSetBacked> entityClass, K key, ChangeSet changeSet)
-			throws DataAccessException, NotFoundException;
+			throws NotFoundException;
 
 	/**
 	 * Return id
@@ -42,7 +41,7 @@ public interface ChangeSetPersister<K> {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	K getPersistentId(ChangeSetBacked entity, ChangeSet cs) throws DataAccessException;
+	K getPersistentId(ChangeSetBacked entity, ChangeSet cs);
 
 	/**
 	 * Return key
@@ -52,12 +51,12 @@ public interface ChangeSetPersister<K> {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	K persistState(ChangeSetBacked entity, ChangeSet cs) throws DataAccessException;
+	K persistState(ChangeSetBacked entity, ChangeSet cs);
 
 	/**
 	 * Exception thrown in alternate control flow if getPersistentState finds no entity data.
 	 */
-	class NotFoundException extends Exception {
+	class NotFoundException extends RuntimeException {
 
 		private static final long serialVersionUID = -8604207973816331140L;
 	}

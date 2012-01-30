@@ -21,7 +21,6 @@ import org.springframework.data.mapping.PropertyPath;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
 import org.springframework.data.util.TypeInformation;
-import org.springframework.validation.Validator;
 
 /**
  * <p>
@@ -85,5 +84,5 @@ public interface MappingContext<E extends PersistentEntity<?, P>, P extends Pers
 	 * @param entity The entity
 	 * @return A validator or null if none exists for the given entity
 	 */
-	List<Validator> getEntityValidators(E entity);
+	//List<Validator> getEntityValidators(E entity);
 }
